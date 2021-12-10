@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Mean estimator for Model without meanstructure. FOR INTERNAL USAGE ONLY."""
+"""Mean estimator for Model without mean structure. FOR INTERNAL USAGE ONLY."""
 
 import pandas as pd
 import numpy as np
@@ -10,8 +10,8 @@ from .utils import chol_inv
 from .stats import calc_se, calc_zvals, calc_pvals
 
 
-class MeanEstimator():
-    """Simple mean estimator for the Model without meanstructure."""
+class MeanEstimator:
+    """Simple mean estimator for the Model without mean structure."""
 
     __slots__ = ['sigma', 'm', 'mx_data', 'mx_data_t', 'diffs', 'range_mu',
                  'range_vu', 'mu', 'vu', 'param_vals', 'last_result',
@@ -306,7 +306,7 @@ class MeanEstimator():
         return res
 
 
-def estimate_means(mod: Model, method='ML', solver='SLSQP', 
+def estimate_means(mod: Model, method='ML', solver='SLSQP',
                    pvals=False, ret_opt=False):
     """
     Estimate means for meanstructure-free model.

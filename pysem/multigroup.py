@@ -9,6 +9,7 @@ from .stats import calc_stats
 from dataclasses import dataclass
 import pandas as pd
 
+
 @dataclass
 class MultigroupResult:
     """Structure for printing info on multiple semopy runs, each per group."""
@@ -29,9 +30,6 @@ class MultigroupResult:
             s += f'Group {i + 1}: {g}\n'
             s += self.estimates[g].to_string() + '\n'
         return s
-        
-
-    
 
 
 def multigroup(desc, data: pd.DataFrame, group: str, mod=Model,
@@ -58,7 +56,7 @@ def multigroup(desc, data: pd.DataFrame, group: str, mod=Model,
         Printable MultigroupResult.
 
     """
-    
+
     groups = data[group].unique()
     res = MultigroupResult(groups, dict(), dict(), dict(), dict())
     if type(desc) is str:

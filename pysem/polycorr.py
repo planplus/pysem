@@ -39,6 +39,7 @@ def bivariate_cdf(lower, upper, corr, means=[0, 0], var=[1, 1]):
     s = np.array([[var[0], corr], [corr, var[1]]])
     return mvn.mvnun(lower, upper, means, s)[0]
 
+
 def univariate_cdf(lower, upper, mean=0, var=1):
     """
     Estimate an integral of univariate pdf.
@@ -65,6 +66,7 @@ def univariate_cdf(lower, upper, mean=0, var=1):
     """
     return mvn.mvnun([lower], [upper], [mean], [var])[0]
 
+
 def estimate_intervals(x, inf=10):
     """
     Estimate intervals of the polytomized underlying latent variable.
@@ -90,6 +92,7 @@ def estimate_intervals(x, inf=10):
     cumcounts = np.cumsum(counts[:-1])
     u = [np.where(u == sample)[0][0] + 1 for sample in x]
     return list(chain([-inf], (norm.ppf(n / sz) for n in cumcounts), [inf])), u
+
 
 def polyserial_corr(x, y, x_mean=None, x_var=None, x_z=None, x_pdfs=None,
                     y_ints=None, scalar=True):
@@ -137,15 +140,19 @@ def polyserial_corr(x, y, x_mean=None, x_var=None, x_z=None, x_pdfs=None,
     if x_pdfs is None:
         x_pdfs = norm.logpdf(x, x_mean, x_var)
     ints, inds = y_ints
+
     def transform_tau(tau, rho, z):
         return (tau - rho * z) / np.sqrt(1 - rho ** 2)
+
     def sub_pr(k, rho, z):
         i = transform_tau(ints[k], rho, z)
         j = transform_tau(ints[k - 1], rho, z)
         return univariate_cdf(j, i)
+
     def calc_likelihood(rho):
         return -sum(pdf + np.log(sub_pr(ind, rho, z))
                     for z, ind, pdf in zip(x_z, inds, x_pdfs))
+
     def calc_likelihood_derivative(rho):
         def sub(k, z):
             i = transform_tau(ints[k], rho, z)
@@ -153,9 +160,11 @@ def polyserial_corr(x, y, x_mean=None, x_var=None, x_z=None, x_pdfs=None,
             a = norm.pdf(i) * (ints[k] * rho - z)
             b = norm.pdf(j) * (ints[k - 1] * rho - z)
             return a - b
+
         t = (1 - rho ** 2) ** 1.5
         return -sum(sub(ind, z) / sub_pr(ind, rho, z)
-                   for x, z, ind in zip(x, x_z, inds) if not np.isnan(x)) / t
+                    for x, z, ind in zip(x, x_z, inds) if not np.isnan(x)) / t
+
     if not scalar:
         res = minimize(calc_likelihood, [0.0], jac=calc_likelihood_derivative,
                        method='SLSQP', bounds=[(-1.0, 1.0)]).x[0]
@@ -163,6 +172,7 @@ def polyserial_corr(x, y, x_mean=None, x_var=None, x_z=None, x_pdfs=None,
         res = minimize_scalar(calc_likelihood, bounds=(-1, 1),
                               method='bounded').x
     return res
+
 
 def polychoric_corr(x, y, x_ints=None, y_ints=None):
     """
@@ -200,12 +210,14 @@ def polychoric_corr(x, y, x_ints=None, y_ints=None):
     for a, b in zip(x_inds, y_inds):
         if not (np.isnan(a) or np.isnan(b)):
             n[a - 1, b - 1] += 1
+
     def calc_likelihood(r):
         return -sum(np.log(bivariate_cdf([x_ints[i], y_ints[j]],
-                                 [x_ints[i + 1], y_ints[j + 1]], r)) * n[i, j]
+                                         [x_ints[i + 1], y_ints[j + 1]], r)) * n[i, j]
                     for i in range(p) for j in range(m))
+
     return minimize_scalar(calc_likelihood, bounds=(-1, 1), method='bounded').x
-                
+
 
 def hetcor(data, ords=None, nearest=False):
     """
@@ -263,7 +275,7 @@ def hetcor(data, ords=None, nearest=False):
     if nearest:
         if type(cov) is pd.DataFrame:
             names = cov.columns
-            cov = corr_nearest(cov,threshold=0.05)
+            cov = corr_nearest(cov, threshold=0.05)
             cov = pd.DataFrame(cov, columns=names, index=names)
         else:
             cov = corr_nearest(cov, threshold=0.05)

@@ -8,12 +8,13 @@ import numpy as np
 
 class EffectKernel(EffectBase):
     """
-    Kernel similiarity effect.
+    Kernel similarity effect.
     
     If active parameter is False, then this effect introduces no extra
     parameters other than those that come along the D matrix. Kernels are
     provided by sklearn.gaussian_process.kernels submodule.
     """
+
     def __init__(self, columns: str, kernel: Kernel, params: dict,
                  active=False, d_mode='diag'):
         """
@@ -42,7 +43,7 @@ class EffectKernel(EffectBase):
         None.
 
         """
-        
+
         super().__init__(columns, d_mode=d_mode)
         self.active = active
         if active:
@@ -101,7 +102,7 @@ class EffectKernel(EffectBase):
             k = self.kernel(**self.kernel_params)(data[self.columns].values)
             self.mx_k = k
         else:
-            self.mx_c = data[self.columns].values    
+            self.mx_c = data[self.columns].values
 
     def calc_k(self, model):
         if not self.active:
@@ -117,7 +118,7 @@ class EffectKernel(EffectBase):
                     d[n] = p[i:m]
                 i += m
             return self.kernel(**d)(self.mx_c)
-    
+
     def calc_k_grad(self, model):
         if not self.active:
             return list()

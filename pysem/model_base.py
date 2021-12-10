@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Base model module that contains ModelBase for lienear SEM models."""
+"""Base model module that contains ModelBase for linear SEM models."""
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from .parser import parse_desc
 from itertools import chain
+
 
 class ModelBase(ABC):
     """
     Base model class.
 
     Model is a base class for linear semopy SEM models. It bears the burden of
-    instantiating base SEM relatioships for their further explotation
+    instantiating base SEM relationships for their further exploration
     in practical semopy SEM models.
     """
 
@@ -30,7 +31,7 @@ class ModelBase(ABC):
         Instantiate base model.
 
         Model is a base class for linear semopy SEM models. It bears the
-        of burdens instantiating base SEM relatioships for their further
+        of burdens instantiating base SEM relationships for their further
         exploitation in practical semopy SEM models.
         Parameters
         ----------
@@ -191,7 +192,7 @@ class ModelBase(ABC):
         Parameters
         -------
         effects : dict
-            Maping opcode->values->rvalues->mutiplicator.
+            Maping opcode->values->rvalues->multiplicator.
 
         Returns
         -------
@@ -231,7 +232,6 @@ class ModelBase(ABC):
 
         """
         pass
-
 
     def operation_latent(self, operation):
         """

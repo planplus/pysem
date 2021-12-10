@@ -11,6 +11,7 @@ class EffectAR(EffectBase):
     At the moment, only autoregressive model of the first order is supported.
     Feel free to introduce higher order models :)
     """
+
     def __init__(self, columns: str, dt=1, param=None, d_mode='diag'):
         """
         Instantiate EffectAR.
@@ -37,7 +38,7 @@ class EffectAR(EffectBase):
         None.
 
         """
-        
+
         super().__init__(columns, d_mode=d_mode)
         self.dt = dt
         self.param = param

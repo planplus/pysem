@@ -63,7 +63,7 @@ def generate_data(model: ModelMeans, n: int, drop_lats=True,
                     pass
             else:
                 gamma = model.mx_g
-            res = lambc @  model.mx_gamma1 @ gamma + delta.T
+            res = lambc @ model.mx_gamma1 @ gamma + delta.T
             if epsilon is not None:
                 res += lambc @ epsilon.T
             res += model.mx_gamma2 @ gamma

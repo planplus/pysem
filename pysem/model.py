@@ -23,7 +23,7 @@ class Model(ModelBase):
     symb_bound_parameters = 'BOUND'
     symb_constraint = 'CONSTRAINT'
     symb_ordinal = 'ordinal'
-    
+
     # New syntax counterparts for operations:
     symbn_starting_values = 'start'
     symbn_bound_parameters = 'bound'
@@ -184,7 +184,6 @@ class Model(ModelBase):
         self.param_ranges = ranges
         self.mx_diffs = diff_matrices
         self.identity_c = np.identity(self.mx_beta.shape[0])
-    
 
     def post_classification(self, effects: dict):
         """
@@ -669,7 +668,7 @@ class Model(ModelBase):
         None.
 
         """
-        try:                
+        try:
             a = float(operation.params[0])
             b = float(operation.params[1])
             b = (a, b)
@@ -750,7 +749,7 @@ class Model(ModelBase):
         params = [name for name, param in self.parameters.items()
                   if param.active]
         self.constraints.append(parse_constraint(constr, params))
-    
+
     def operation_new_constraint(self, operation):
         """
         Works through CONSTRAINT command.
@@ -798,7 +797,7 @@ class Model(ModelBase):
             else:
                 ords = self.vars['ordinal']
             ords.update(operation.onto)
-    
+
     def operation_ordinal(self, operation):
         """
         Works through ordinal command.
@@ -820,7 +819,6 @@ class Model(ModelBase):
         else:
             ords = self.vars['ordinal']
         ords.update(operation.onto)
-    
 
     def update_matrices(self, params: np.ndarray):
         """
@@ -1104,8 +1102,8 @@ class Model(ModelBase):
             self.prepare_fiml()
         elif obj in ('WLS', 'DWLS'):
             if (not hasattr(self, 'last_result')) or \
-                (self.last_result.name_obj != obj):
-                    self.prepare_wls(obj, data is None)
+                    (self.last_result.name_obj != obj):
+                self.prepare_wls(obj, data is None)
         fun, grad = self.get_objective(obj, regularization=regularization)
         solver = Solver(solver, fun, grad, self.param_vals,
                         constrs=self.constraints,
@@ -1150,8 +1148,8 @@ class Model(ModelBase):
                 if regu_grad is None:
                     return lambda x: fun(x) + regu(x), None
                 else:
-                    return lambda x: fun(x) + regu(x),\
-                        lambda x: grad(x) + regu_grad(x)
+                    return lambda x: fun(x) + regu(x), \
+                           lambda x: grad(x) + regu_grad(x)
         except KeyError:
             raise KeyError(f'{name} is unknown objective function.')
 
@@ -1191,7 +1189,7 @@ class Model(ModelBase):
         None.
 
         """
-        
+
         data = self.mx_data - self.mx_data.mean(axis=0)
         products = list()
         for i in range(data.shape[1]):
@@ -1212,7 +1210,6 @@ class Model(ModelBase):
         self.mx_w = w
         self.inds_triu_sigma = np.triu_indices_from(self.mx_cov)
         self.mx_vech_s = self.mx_cov[self.inds_triu_sigma]
-
 
     def predict(self, x: pd.DataFrame, intercepts=False):
         """
@@ -1326,7 +1323,7 @@ class Model(ModelBase):
             opts = list()
             for i in range(0, x.shape[0], chunk_size):
                 res = self.predict(x.iloc[i:i + chunk_size], solver=solver,
-                                   factors=factors, ret_opt=ret_opt, 
+                                   factors=factors, ret_opt=ret_opt,
                                    chunk_size=None)
                 if ret_opt:
                     opts.append(res[1])
@@ -1705,7 +1702,7 @@ class Model(ModelBase):
         except np.linalg.LinAlgError:
             return np.nan
         return diff.T @ self.mx_w_inv @ diff
-    
+
     def grad_wls(self, x: np.ndarray):
         self.update_matrices(x)
         try:
@@ -1716,11 +1713,11 @@ class Model(ModelBase):
             t[:] = np.inf
             return t
         sigma_grad = [g[self.inds_triu_sigma].T
-                        for g in self.calc_sigma_grad(m, c)]
+                      for g in self.calc_sigma_grad(m, c)]
         diff = sigma - self.mx_vech_s
         t = self.mx_w_inv @ diff
         return 2 * np.array([g @ t for g in sigma_grad])
-    
+
     def obj_dwls(self, x: np.ndarray):
         self.update_matrices(x)
         try:
@@ -1728,7 +1725,7 @@ class Model(ModelBase):
         except np.linalg.LinAlgError:
             return np.nan
         return diff.T * self.mx_w_inv @ diff
-    
+
     def grad_dwls(self, x: np.ndarray):
         self.update_matrices(x)
         try:
@@ -1739,11 +1736,10 @@ class Model(ModelBase):
             t[:] = np.inf
             return t
         sigma_grad = [g[self.inds_triu_sigma].T
-                        for g in self.calc_sigma_grad(m, c)]
+                      for g in self.calc_sigma_grad(m, c)]
         diff = sigma - self.mx_vech_s
         t = self.mx_w_inv * diff
         return 2 * np.array([g @ t for g in sigma_grad])
-        
 
     '''
     -------------------------Fisher Information Matrix------------------------
@@ -1781,7 +1777,7 @@ class Model(ModelBase):
                                  ' n_samples argument to the fit or load'
                                  ' methods.')
         n /= 2
-        
+
         for i in range(sz):
             for k in range(i, sz):
                 info[i, k] = n * np.einsum('ij,ji->', sgs[i], sgs[k])
@@ -1792,9 +1788,9 @@ class Model(ModelBase):
                 self._fim_warn = False
             except np.linalg.LinAlgError:
                 logging.warn("Fisher Information Matrix is not PD."
-                              "Moore-Penrose inverse will be used instead of "
-                              "Cholesky decomposition. See "
-                              "10.1109/TSP.2012.2208105.")
+                             "Moore-Penrose inverse will be used instead of "
+                             "Cholesky decomposition. See "
+                             "10.1109/TSP.2012.2208105.")
                 self._fim_warn = True
                 fim_inv = np.linalg.pinv(fim)
             return (fim, fim_inv)
@@ -1832,7 +1828,7 @@ class Model(ModelBase):
         data -= data.mean(axis=0)
         for i in range(self.mx_data.shape[0]):
             x = data[i, np.newaxis]
-            t = inv_sigma @ (mx_i -  x.T @ x @ inv_sigma)
+            t = inv_sigma @ (mx_i - x.T @ x @ inv_sigma)
             res.append(np.array([np.einsum('ij,ji->', t, g)
-                                 for g in sigma_grad]) / 2)      
+                                 for g in sigma_grad]) / 2)
         return res

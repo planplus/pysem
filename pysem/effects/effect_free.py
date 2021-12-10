@@ -11,8 +11,9 @@ class EffectFree(EffectBase):
     Effect with a fully parametrised K matrix.
     
     Number of new parameters introduced is equal to g(g + 1) / 2, where g is
-    an unique number of groups in data.
+    a unique number of groups in data.
     """
+
     def __init__(self, columns: str, correlation=True, d_mode='diag'):
         """
         Instantiate EffectStatic.
@@ -37,7 +38,7 @@ class EffectFree(EffectBase):
         None.
 
         """
-        
+
         super().__init__(columns, d_mode=d_mode)
         self.correlation = correlation
 

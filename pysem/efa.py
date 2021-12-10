@@ -64,7 +64,7 @@ def find_latents(data: pd.DataFrame, min_loadings=2, mx_cor=None,
     if mode == 'optics':
         for i, label in enumerate(clust.labels_):
             if label != -1:
-                name = f'eta{label+1}{underscript}'
+                name = f'eta{label + 1}{underscript}'
             else:
                 name = -1
             loadings[name].add(names[i])
@@ -77,7 +77,7 @@ def find_latents(data: pd.DataFrame, min_loadings=2, mx_cor=None,
         for i in range(cmp.shape[0]):
             inds = np.where(abs(cmp[i]) >= 0.05)[0]
             inds = data.columns[inds]
-            name = f'eta{i+1}{underscript}'
+            name = f'eta{i + 1}{underscript}'
             loadings[name] = set(inds)
     for lat, inds in loadings.items():
         if lat == -1:
@@ -192,6 +192,7 @@ def finalize_loadings(loadings: dict, data: pd.DataFrame, dist: pd.DataFrame,
         if m._fim_warn:
             return float('inf')
         return get_loading_significiance(ins, ind, lat)
+
     loadings = deepcopy(loadings)
     clean_loadings(loadings, base_desc)
     if only_clean:

@@ -23,12 +23,13 @@ def duplication_matrix(n: int):
     d = np.zeros((m, k))
     for i in range(n):
         for j in range(i + 1):
-            a1 =  i * n + j
-            a2 =  j * n + i
+            a1 = i * n + j
+            a2 = j * n + i
             b = j * n + i - j * (j + 1) // 2
             d[a1, b] = 1
             d[a2, b] = 1
     return d
+
 
 def kron_identity(mx: np.ndarray, sz: int, back=False):
     """
@@ -55,12 +56,13 @@ def kron_identity(mx: np.ndarray, sz: int, back=False):
     r = np.arange(sz)
     if back:
         out = np.zeros((sz, m, sz, n), dtype=mx.dtype)
-        out[r,:,r,:] = mx
+        out[r, :, r, :] = mx
     else:
         out = np.zeros((m, sz, n, sz), dtype=mx.dtype)
-        out[:,r,:,r] = mx
-    out.shape = (m * sz,n * sz)
+        out[:, r, :, r] = mx
+    out.shape = (m * sz, n * sz)
     return out
+
 
 def delete_mx(mx: np.ndarray, exclude: np.ndarray):
     """
@@ -100,7 +102,7 @@ def cov(x: np.ndarray):
     masked_x = np.ma.array(x, mask=np.isnan(x))
     cov = np.ma.cov(masked_x, bias=True, rowvar=False).data
     if cov.size == 1:
-        cov.resize((1,1))
+        cov.resize((1, 1))
     return cov
 
 
@@ -122,8 +124,9 @@ def cor(x: np.ndarray):
     masked_x = np.ma.array(x, mask=np.isnan(x))
     cor = np.ma.corrcoef(masked_x, bias=True, rowvar=False).data
     if cor.size == 1:
-        cor.resize((1,1))
+        cor.resize((1, 1))
     return cor
+
 
 def chol(x: np.array, inv=True):
     """
@@ -145,7 +148,6 @@ def chol(x: np.array, inv=True):
     if inv:
         lapack.dtrtri(c, overwrite_c=1)
     return c
-    
 
 
 def chol_inv(x: np.array):
@@ -287,13 +289,13 @@ def compare_results(model, true: pd.DataFrame, error='relative',
     if return_table:
         d = {'lval': lvals, 'op': ops, 'rval': rvals, 'Error': errs,
              'Estimate': ests, 'True': trues}
-        df = pd.DataFrame.from_dict(d).sort_values('Error', axis=0, 
+        df = pd.DataFrame.from_dict(d).sort_values('Error', axis=0,
                                                    ascending=False)
         return df
     return errs
 
 
-def calc_zkz(groups: pd.Series, k: pd.DataFrame, p_names=None, 
+def calc_zkz(groups: pd.Series, k: pd.DataFrame, p_names=None,
              return_z=False):
     """
     Calculate ZKZ^T relationship matrix from covariance matrix K.
@@ -364,7 +366,7 @@ def calc_zkz(groups: pd.Series, k: pd.DataFrame, p_names=None,
 
 
 def calc_reduced_ml(model, variables: set, x=None,
-                       exclude=False):
+                    exclude=False):
     """
     Calculate ML with restricted/reduced sigma.
 
@@ -386,7 +388,7 @@ def calc_reduced_ml(model, variables: set, x=None,
         Degenerate ML.
 
     """
-    
+
     from .model import Model
     if type(model) is not Model:
         raise Exception('ModelMeans or ModelEffects degenerate ML is not '
@@ -396,11 +398,13 @@ def calc_reduced_ml(model, variables: set, x=None,
         inds = [obs.index(v) for v in variables]
     else:
         inds = [i for i, v in enumerate(obs) if v not in variables]
+
     def deg_sigma():
         sigma, (m, c) = true_sigma()
         sigma = delete_mx(sigma, inds)
         m = np.delete(m, inds, axis=0)
         return sigma, (m, c)
+
     true_sigma = model.calc_sigma
     true_cov = model.mx_cov
     true_covlogdet = model.cov_logdet

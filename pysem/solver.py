@@ -25,7 +25,7 @@ class SolverResult:
         s = list()
         if self.name_obj:
             s.append('Name of objective: ' + self.name_obj)
-        s.append('Optimization method: ' + self.name_method)  
+        s.append('Optimization method: ' + self.name_method)
         if self.success:
             s.append('Optimization successful.')
         s.append(str(self.message))
@@ -129,7 +129,7 @@ class Solver():
                     b = bmax
                 bs.append((a, b))
             res = differential_evolution(self.fun, bounds=bs,
-                       constraints=self.constraints, **t)
+                                         constraints=self.constraints, **t)
         else:
             res = minimize(self.fun, self.start, jac=self.grad, bounds=self.bounds,
                            constraints=self.constraints, options=self.options,

@@ -4,7 +4,6 @@ name = "semopy"
 __version__ = "2.3.8"
 __author__ = "Georgy Meshcheryakov"
 
-
 from .model_generalized_effects import ModelGeneralizedEffects
 from .model_effects import ModelEffects
 from .model_means import ModelMeans
@@ -17,8 +16,7 @@ from .unbias import bias_correction
 from .optimizer import Optimizer
 from .report import report
 from . import model_generation
-from . import effects 
+from . import effects
 from . import multigroup
-from . import examples
 from . import utils
 from . import efa

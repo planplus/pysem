@@ -53,7 +53,7 @@ def get_baseline_model(model, data=None):
     desc = model.description
     tp = type(model)
     tp_name = tp.__name__
-    if tp_name not in ('Model', ):
+    if tp_name not in ('Model',):
         mod = tp(desc, baseline=True, intercepts=model.intercepts)
     else:
         mod = tp(desc, baseline=True)
@@ -75,7 +75,7 @@ def get_baseline_model(model, data=None):
             else:
                 data = pd.DataFrame(data=model.mx_cov,
                                     index=model.vars['observed'],
-                                    columns=model.vars['observed']) 
+                                    columns=model.vars['observed'])
                 mod.load(cov=data, n_samples=model.n_samples)
     except AttributeError:
         pass
@@ -104,7 +104,7 @@ def __get_chi2_base(model):
             obj = 'REML'
         elif obj == 'FIML':
             obj = 'ML'
-    elif type(mod_base).__name__ in ('ModelMeans', ):
+    elif type(mod_base).__name__ in ('ModelMeans',):
         if obj == 'FIML':
             obj = 'ML'
     mod_base.fit(obj=obj)
@@ -341,7 +341,7 @@ def calc_chi2_sb(model, stat=None, dof=None):
     sigma, (m, c) = model.calc_sigma()
     inds = np.triu_indices_from(sigma)
     grad = np.array([g[inds].flatten(order='F')
-                    for g in model.calc_sigma_grad(m, c)]).T
+                     for g in model.calc_sigma_grad(m, c)]).T
     sigma_inv = np.linalg.inv(sigma)
     k = np.kron(sigma_inv, sigma_inv)
     dup = duplication_matrix(sigma.shape[0])
@@ -496,7 +496,7 @@ def calc_se(model, information='expected', robust=False):
                 except KeyError:
                     fun, grad = model.get_objective('MLW')
                     mult = 1.0
-        
+
     if information == 'expected':
         mx_inf = model.calc_fim(inverse=True)[1]
     else:
@@ -507,13 +507,13 @@ def calc_se(model, information='expected', robust=False):
             hess = Gradient(grad)(model.param_vals)
         mx_inf = np.linalg.pinv(hess) / mult
     if robust:
-        g = sum(np.outer(g,g) for g in model.grad_se_g(model.param_vals))
+        g = sum(np.outer(g, g) for g in model.grad_se_g(model.param_vals))
         mx_inf = mx_inf @ g @ mx_inf
     variances = mx_inf.diagonal().copy()
     inds = (variances < 0) & (variances > -1e-1)
     variances[inds] = 1e-12
     variances[variances < 0] = np.nan  # So numpy won't throw a warning.
-    return np.sqrt(variances) 
+    return np.sqrt(variances)
 
 
 def calc_zvals(model, std_errors=None, information='expected'):

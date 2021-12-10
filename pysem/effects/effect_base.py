@@ -11,6 +11,7 @@ class EffectBase(ABC):
     interface for ModelGeneralizedEffects to infer sample-wise covariance
     structure.
     """
+
     def __init__(self, columns=None, d_mode='diag'):
         """
         Instantiate EffectBase abstract class.
@@ -32,7 +33,7 @@ class EffectBase(ABC):
 
         """
         if type(columns) is str:
-            columns = (columns, )
+            columns = (columns,)
         elif columns is None:
             columns = list()
         self.columns = columns

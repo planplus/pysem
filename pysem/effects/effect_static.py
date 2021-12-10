@@ -13,6 +13,7 @@ class EffectStatic(EffectBase):
     This effect introduces no extra parameters other than those that come along
     the D matrix.
     """
+
     def __init__(self, columns: str, k: pd.DataFrame, d_mode='diag'):
         """
         Instantiate EffectStatic.
@@ -36,7 +37,7 @@ class EffectStatic(EffectBase):
         None.
 
         """
-        
+
         super().__init__(columns, d_mode=d_mode)
         self.k = k
 
@@ -68,7 +69,7 @@ class EffectStatic(EffectBase):
         super().load(i, model, data, clean_start, **kwargs)
         if clean_start:
             self.parameters = np.array([])
-        mx_k = kwargs.get(f'k_{self.order+1}', self.k)
+        mx_k = kwargs.get(f'k_{self.order + 1}', self.k)
         c = data[self.columns[0]]
         self.mx_k = calc_zkz(c, mx_k)
 

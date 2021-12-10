@@ -55,12 +55,12 @@ class ModelGeneralizedEffects(ModelMeans):
 
         """
         if type(effects) not in (list, tuple):
-            effects = (effects, )
+            effects = (effects,)
         self.effects = effects
-        self.symbs_rf = [f'~{i+1}~' for i in range(len(effects))]
+        self.symbs_rf = [f'~{i + 1}~' for i in range(len(effects))]
         matrices = list(self.matrices_names)
         for i, symb in enumerate(self.symbs_rf):
-            name = f'd{i+1}'
+            name = f'd{i + 1}'
             setattr(self, f'build_{name}', self.build_d)
             setattr(self, f'start_{name}', startingvalues.start_d)
             matrices.append(name)
@@ -70,7 +70,7 @@ class ModelGeneralizedEffects(ModelMeans):
         super().__init__(description, mimic_lavaan=False, baseline=baseline,
                          cov_diag=cov_diag, intercepts=intercepts)
         self.objectives = {'FIML': (self.obj_matnorm, self.grad_matnorm)}
-    
+
     def preprocess_effects(self, effects: dict):
         """
         Run a routine just before effects are applied.
@@ -158,7 +158,6 @@ class ModelGeneralizedEffects(ModelMeans):
         self.load_starting_values()
         if clean_slate or not hasattr(self, 'param_vals'):
             self.prepare_params()
-
 
     def prepare_params(self):
         """
@@ -278,7 +277,6 @@ class ModelGeneralizedEffects(ModelMeans):
         for effect in self.effects:
             b.extend(effect.get_bounds())
         return b
-
 
     def fit(self, data=None, cov=None, obj='ML', solver='SLSQP', groups=None,
             clean_slate=False, **kwargs):
@@ -431,7 +429,7 @@ class ModelGeneralizedEffects(ModelMeans):
         if k is None:
             k = self.calc_ks()
             if k_grad is None:
-                k_grad= self.calc_ks_grad()
+                k_grad = self.calc_ks_grad()
         k = list(map(np.trace, k))
         k_grad = list(map(np.trace, k_grad))
         grad = list()
@@ -513,7 +511,7 @@ class ModelGeneralizedEffects(ModelMeans):
         if k is None:
             k = self.calc_ks()
             if k_grad is None:
-                k_grad= self.calc_ks_grad()
+                k_grad = self.calc_ks_grad()
         grad = list()
         for g, df in zip(sigma_grad, self.mx_diffs):
             try:
@@ -540,7 +538,7 @@ class ModelGeneralizedEffects(ModelMeans):
         for effect in self.effects:
             grad.extend(effect.calc_k_grad(self))
         return grad
-    
+
     def calc_mean_grad(self, m=None, c=None):
         if m is None:
             m, c = self.calc_sigma()[1]
@@ -549,10 +547,11 @@ class ModelGeneralizedEffects(ModelMeans):
         p = len(self.param_vals)
         grad.extend([np.float(0.0)] * (p - n))
         return grad
-    
+
     '''
     ------------------Matrix Variate Normal Maximum Likelihood-----------------
     '''
+
     def obj_matnorm(self, x: np.ndarray):
         """
         Loglikelihood of matrix-variate normal distribution.
@@ -584,7 +583,7 @@ class ModelGeneralizedEffects(ModelMeans):
         m = self.num_m
         n = self.n_samples
         return a + n * l_logdet + m * t_logdet - n * m * np.log(tr_l)
-        
+
     def grad_matnorm(self, x: np.ndarray):
         grad = np.zeros_like(x)
         self.update_matrices(x)
@@ -623,14 +622,14 @@ class ModelGeneralizedEffects(ModelMeans):
                 g += tr_lg * big_tr + m * np.trace(ai) + n * np.trace(bi)
                 g -= tr_l * (np.einsum('ij,ji', ai, c1) + \
                              np.einsum('ij,ji', bi, c2))
-                g -= n * m * tr_lg / tr_l 
+                g -= n * m * tr_lg / tr_l
             grad[i] = g
         return grad
 
     '''
     -------------------------Prediction method--------------------------------
     '''
-    
+
     def predict(self, x: pd.DataFrame, effects=None):
         """
         Predict data given certain observations.
@@ -737,7 +736,8 @@ class ModelGeneralizedEffects(ModelMeans):
         c = np.linalg.inv(np.identity(self.mx_beta.shape[0]) - self.mx_beta)
         c_1 = c[:num_lat, :]
         c_2 = c[num_lat:, :]
-        g1 = self.mx_gamma1; g2 = self.mx_gamma2;
+        g1 = self.mx_gamma1;
+        g2 = self.mx_gamma2;
         M_h = x - (g2 + lambda_x @ c_2 @ g1) @ g
         t = lambda_x @ c_2
         L_zh = (t @ self.mx_psi @ t.T + self.mx_theta) * (x.shape[1])
@@ -775,7 +775,7 @@ class ModelGeneralizedEffects(ModelMeans):
     '''
     -------------------------Best Linear Unbiased Predictor--------------------
     '''
-    
+
     def calc_blup(self, ind_effects=None):
         """
         Estimate random effects values (BLUP).
@@ -854,7 +854,7 @@ class ModelGeneralizedEffects(ModelMeans):
         try:
             t_inv = chol_inv(t)
         except np.linalg.LinAlgError:
-            t_inv= np.linalg.pinv(t)
+            t_inv = np.linalg.pinv(t)
         try:
             l_inv = chol_inv(l)
         except np.linalg.LinAlgError:

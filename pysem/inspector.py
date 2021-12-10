@@ -530,7 +530,7 @@ def inspect_list(model: Model, information='expected', std_est=False,
                 'z-value', 'p-value']
     else:
         cols = ['lval', 'op', 'rval', 'Estimate', 'Std. Err', 'z-value',
-                'p-value']        
+                'p-value']
     res = pd.DataFrame(res, columns=cols)
     if index_names:
         res.index = param_names

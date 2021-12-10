@@ -40,7 +40,7 @@ def generate_cfa(n_lat: int, n_inds: int, p_join=0.0, max_join=1,
     """
     res = dict()
     if type(n_lat) in (tuple, list):
-        n_lat = random.randint(n_lat[0], n_lat[1])        
+        n_lat = random.randint(n_lat[0], n_lat[1])
     ind_count = 0
     for i in range(n_lat):
         m = n_inds
@@ -49,7 +49,7 @@ def generate_cfa(n_lat: int, n_inds: int, p_join=0.0, max_join=1,
         if type(base_lat) in (tuple, list):
             lat = base_lat[i]
         else:
-            lat = f'{base_lat}{i+1}'
+            lat = f'{base_lat}{i + 1}'
         lt = list()
         for _ in range(m):
             ind_count += 1
@@ -63,6 +63,7 @@ def generate_cfa(n_lat: int, n_inds: int, p_join=0.0, max_join=1,
                 if latb != lat and random.uniform(0, 1) < p_join:
                     res[latb].append(a)
     return res
+
 
 def generate_sem(n_endo: int, n_exo: int, n_cycles: int, p_edge=0.3, cfa=None,
                  strict_exo=True, base_endo='x', base_exo='g'):
@@ -134,7 +135,7 @@ def generate_sem(n_endo: int, n_exo: int, n_cycles: int, p_edge=0.3, cfa=None,
             if nodes[i] != lv and random.uniform(0, 1) < p_edge:
                 lt.append(nodes[i])
         res[rv] = lt
-    
+
     if strict_exo:
         endogenous = set()
         for _, ins in res.items():
@@ -189,7 +190,7 @@ def dict_to_desc(d: dict, lats=None):
     if lats:
         for lat, inds in lats.items():
             if lat not in d:
-                defines.add(lat)   
+                defines.add(lat)
             else:
                 inds = list(filter(lambda x: x not in d, inds))
                 if not inds:
@@ -234,7 +235,7 @@ def dict_to_desc(d: dict, lats=None):
 def generate_desc(n_endo: int, n_exo: int, n_lat: int, n_inds=3,
                   n_cycles=0, p_join=0.0, max_join=1, p_edge=0.3,
                   strict_exo=True, base_lat='eta', base_ind='y', base_endo='x',
-                  base_exo='g',):
+                  base_exo='g', ):
     """
     Generate string description of a SEM model, suitable for semopy models.
 
@@ -277,7 +278,7 @@ def generate_desc(n_endo: int, n_exo: int, n_lat: int, n_inds=3,
     String description of model, suitable for semopy models.
     """
     cfa = generate_cfa(n_lat, n_inds, p_join=p_join, max_join=max_join,
-                       base_lat=base_lat, base_ind=base_ind,)
+                       base_lat=base_lat, base_ind=base_ind, )
     sem = generate_sem(n_endo, n_exo, n_cycles, p_edge=p_edge, cfa=cfa,
                        strict_exo=strict_exo, base_endo=base_endo,
                        base_exo=base_exo)

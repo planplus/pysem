@@ -4,6 +4,7 @@ testing purposes"""
 from .effect_base import EffectBase
 import numpy as np
 
+
 class EffectBlank(EffectBase):
     """
     This effect does nothing. K matrix is just a static identity matrix.
@@ -11,6 +12,7 @@ class EffectBlank(EffectBase):
     The only purposes of this effect are testing and providing guidelines for
     possible developers.
     """
+
     def __init__(self, d_mode='identity'):
         super().__init__(None, d_mode=d_mode)
 

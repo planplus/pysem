@@ -110,14 +110,14 @@ def l1_smooth(x: np.ndarray, c: float, alpha: float, inds: np.ndarray):
     t = alpha * x[inds]
     e_m = np.exp(-t)
     e_p = np.exp(t)
-    r= (np.log(e_p + 1) + np.log(e_m + 1)).sum() / alpha
+    r = (np.log(e_p + 1) + np.log(e_m + 1)).sum() / alpha
     return r
 
 
 def l1_smooth_grad(x: np.ndarray, c: float, alpha: float, inds: np.ndarray):
     g = np.zeros(len(x))
     g[inds] = x[inds]
-    g = np.tanh(alpha / 2 * g) 
+    g = np.tanh(alpha / 2 * g)
     return g
 
 

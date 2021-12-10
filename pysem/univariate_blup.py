@@ -15,12 +15,14 @@ def grad(sigmas: np.ndarray, y: np.ndarray, k: np.ndarray):
     g[1] = np.sum(yt * k * y) - np.sum(np.log(v ** 2 * k))
     return g
 
+
 def obj(sigmas: np.ndarray, y: np.ndarray, k: np.ndarray):
     v = 1 / (sigmas[0] + sigmas[1] * k)
     if np.any(v < 1e-8):
         return np.nan
     yt = y * v
     return np.sum(yt * y) - np.sum(np.log(v))
+
 
 def blup(y: np.ndarray, k: np.ndarray, p=0.8, maxiter=50):
     """
@@ -45,12 +47,12 @@ def blup(y: np.ndarray, k: np.ndarray, p=0.8, maxiter=50):
         Random effects estimate (BLUP).
 
     """
-    
+
     v = np.var(y)
-    x0 = np.array([p * v, (1- p) * v])
+    x0 = np.array([p * v, (1 - p) * v])
     s = minimize(lambda x: obj(x, y, k), x0, jac=lambda x: grad(x, y, k),
                  method="SLSQP", options={'maxiter': maxiter},
                  bounds=([0, None], [0, None])
                  ).x
-    v = 1/(1 / s[0] + (1 / s[1]) * (1/k))
+    v = 1 / (1 / s[0] + (1 / s[1]) * (1 / k))
     return y * v / s[0], s

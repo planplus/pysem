@@ -10,6 +10,7 @@ class EffectMA(EffectBase):
     
     Number of new parameters introduced is equal to p in M(p).
     """
+
     def __init__(self, columns: str, order=1,
                  dt_bounds=None,
                  d_mode='diag'):
@@ -43,7 +44,7 @@ class EffectMA(EffectBase):
         None.
 
         """
-        
+
         super().__init__(columns, d_mode=d_mode)
         self.ma_order = order
         if dt_bounds is None:
@@ -94,7 +95,6 @@ class EffectMA(EffectBase):
                                                                 inds_b)]
         self.num_n = len(g)
 
-
     def calc_k(self, model):
         params = self.parameters
         n = self.num_n
@@ -113,7 +113,6 @@ class EffectMA(EffectBase):
             mx[ind] = rho
             mx[ind[::-1]] = rho
         return mx
-            
 
     def calc_k_grad(self, model):
         params = self.parameters
@@ -131,8 +130,8 @@ class EffectMA(EffectBase):
                 dro[i - 1] += 1
             for p in range(1, self.ma_order - i + 1):
                 num += params[p - 1] * params[p + i - 1]
-                dro[p - 1] += params[p + i - 1] 
-                dro[p + i - 1] += params[p - 1] 
+                dro[p - 1] += params[p + i - 1]
+                dro[p + i - 1] += params[p - 1]
             dro /= denom
             d1 = - 2 * num / (denom ** 2)
             for p in range(m):

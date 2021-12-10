@@ -6,14 +6,15 @@ from sympy import lambdify, derive_by_array, Symbol
 import numpy as np
 import re
 
+
 def parse_constraint(s: str, params: list):
     try:
-        op = next(re.finditer('(?:>)|(?:<)|(?:=)',s))
+        op = next(re.finditer('(?:>)|(?:<)|(?:=)', s))
         span = op.span()
         expr = s[:span[0]] + '-({})'.format(s[span[1]:])
         op = op.group()
         if op == '<':
-            expr  = f'-({expr})'
+            expr = f'-({expr})'
     except StopIteration:
         raise SyntaxError('>,< or = must be present in constraint string.')
     if op in ('>', '<'):

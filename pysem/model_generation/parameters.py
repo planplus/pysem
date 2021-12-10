@@ -10,18 +10,19 @@ import random
 def param_variance():
     return random.uniform(0.7, 1.3)
 
+
 def param_correlation():
     return random.uniform(-0.3, 0.3)
+
 
 def param_loading():
     return random.choice([1, -1]) * random.uniform(0.3, 1.5)
 
 
-
-
 random.seed(123)
 
 desc = generate_desc(3, 2, 3, 3, 0)
+
 
 def generate_parameters(desc: str, intercepts=False,
                         sampler_var_psi=param_variance,
@@ -70,7 +71,7 @@ def generate_parameters(desc: str, intercepts=False,
     d = {'lval': [], 'op': [], 'rval': [], 'Estimate': []}
     m = ModelMeans(desc, intercepts=intercepts)
     matrices = m.inspect('mx', what='params')
-    
+
     psi_rows = matrices['Psi'].index
     psi = matrices['Psi'].values
     for i in range(psi.shape[0]):
@@ -100,7 +101,7 @@ def generate_parameters(desc: str, intercepts=False,
                     psi[i, j] = p.start
                     psi[j, i] = p.start
     m.mx_psi = psi.astype('float64')
-    
+
     theta_rows = matrices['Theta'].index
     theta = matrices['Theta'].values
     for i in range(theta.shape[0]):
@@ -130,7 +131,7 @@ def generate_parameters(desc: str, intercepts=False,
                     theta[i, j] = p.start
                     theta[j, i] = p.start
     m.mx_theta = theta.astype('float64')
-    
+
     beta_rows = matrices['Beta'].index
     beta_cols = matrices['Beta'].columns
     beta = matrices['Beta'].values

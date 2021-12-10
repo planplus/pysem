@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Effect with a K matern covariance/similiarity matrix."""
+"""Effect with a K matern covariance/similarity matrix."""
 from sklearn.gaussian_process.kernels import Matern
 from .effect_kernel import EffectKernel
 
@@ -11,7 +11,8 @@ class EffectMatern(EffectKernel):
     If 'active' parameter is False, then this effect introduces no extra
     parameters other than those that come along the D matrix.
     """
-    def __init__(self, columns: str, nu=float('inf'), rho=1.0, 
+
+    def __init__(self, columns: str, nu=float('inf'), rho=1.0,
                  active=False, d_mode='diag'):
         """
         Instantiate EffectMatern.

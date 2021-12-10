@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Graphviz wrapper to visualie SEM models."""
+"""Graphviz wrapper to visualize SEM models."""
 from .model import Model
 import logging
+
 try:
     import graphviz
+
     __GRAPHVIZ = True
 except ModuleNotFoundError:
     logging.info("No graphviz package found, visualization method is "
                  "unavailable")
     __GRAPHVIZ = False
-    
 
-def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
+
+def semplot(mod, filename: str, inspection=None, plot_covs=False,
             plot_exos=True, images=None, engine='dot', latshape='circle',
             plot_ests=True, std_ests=False, show=False):
     """
@@ -20,7 +22,7 @@ def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
 
     Parameters
     ----------
-    mod : Model
+    mod : Model | str
         Model instance.
     filename : str
         Name of file where to plot is saved.
@@ -71,7 +73,7 @@ def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
     t = filename.split('.')
     filename, ext = '.'.join(t[:-1]), t[-1]
     g = graphviz.Digraph('G', format=ext, engine=engine)
-    
+
     g.attr(overlap='scale', splines='true')
     g.attr('edge', fontsize='12')
     g.attr('node', shape=latshape, fillcolor='#cae6df', style='filled')
@@ -80,7 +82,7 @@ def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
             g.node(lat, label='', image=images[lat])
         else:
             g.node(lat, label=lat)
-    
+
     g.attr('node', shape='box', style='')
     for obs in mod.vars['observed']:
         if obs in images:
@@ -96,13 +98,13 @@ def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
         exo_vars = set()
     for _, row in regr.iterrows():
         lval, rval, est = row['lval'], row['rval'], row['Estimate']
-        if (rval not in all_vars) or (~plot_exos and rval in exo_vars) or\
-            (rval == '1'):
+        if (rval not in all_vars) or (~plot_exos and rval in exo_vars) or \
+                (rval == '1'):
             continue
         if plot_ests:
             pval = row['p-value']
             label = '{:.3f}'.format(float(est))
-            if pval !='-':
+            if pval != '-':
                 label += r'\np-val: {:.2f}'.format(float(pval))
         else:
             label = str()
@@ -116,7 +118,7 @@ def semplot(mod: Model, filename: str, inspection=None, plot_covs=False,
             if plot_ests:
                 pval = row['p-value']
                 label = '{:.3f}'.format(float(est))
-                if pval !='-':
+                if pval != '-':
                     label += r'\np-val: {:.2f}'.format(float(pval))
             else:
                 label = str()

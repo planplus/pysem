@@ -185,8 +185,9 @@ def start_gamma2(model, lval: str, rval: str):
     if rval == '1':
         mx = model.mx_data
         i = model.vars['observed'].index(lval)
-        return np.nanmean(mx[:, i]) /  2
+        return np.nanmean(mx[:, i]) / 2
     return 0.0
+
 
 def start_d(model, lval: str, rval: str):
     """
@@ -216,6 +217,7 @@ def start_d(model, lval: str, rval: str):
         return v
     return 0.0
 
+
 def start_v(model, lval: str, rval: str):
     """
     Calculate starting value for parameter in data given data in model.
@@ -236,7 +238,7 @@ def start_v(model, lval: str, rval: str):
 
     """
     return 1.0
-  
+
 
 '''---------------------------------IMPUTER---------------------------------'''
 
@@ -268,6 +270,7 @@ def start_data_imp(model, lval: str, rval: str):
         return 0.0
     mx = model.mod.mx_data
     return np.nanmean(mx[:, i])
+
 
 def start_g_imp(model, lval: str, rval: str):
     """
@@ -459,6 +462,7 @@ def start_theta_imp(model, lval: str, rval: str):
     v = mx[i, j]
     return v
 
+
 def start_d_imp(model, lval: str, rval: str):
     """
     Calculate starting value for parameter in data given data in model.
@@ -484,6 +488,7 @@ def start_d_imp(model, lval: str, rval: str):
     i, j = rows.index(lval), cols.index(rval)
     v = mx[i, j]
     return v
+
 
 def start_v_imp(model, lval: str, rval: str):
     """

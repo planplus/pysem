@@ -5,6 +5,7 @@ from copy import deepcopy
 import pandas as pd
 import numpy as np
 
+
 def bias_correction(model, n=100, resample_mean=False, extra_data=None,
                     max_rel_fun=1000, clean_slate=False, **kwargs):
     """
@@ -13,7 +14,7 @@ def bias_correction(model, n=100, resample_mean=False, extra_data=None,
     Parameters
     ----------
     model : TYPE
-        Model or ModelMeans. Tehnically, ModelEffects and
+        Model or ModelMeans. Technically, ModelEffects and
         ModelGeneralizedEffects will work too, but the results are almost
         guaranteed to be bad. It will probably change eventually, but not
         anytime soon.
@@ -39,7 +40,7 @@ def bias_correction(model, n=100, resample_mean=False, extra_data=None,
     None.
 
     """
-    
+
     model_c = deepcopy(model)
     t = None
     try:
@@ -76,4 +77,3 @@ def bias_correction(model, n=100, resample_mean=False, extra_data=None,
         i += 1
         row_fails = 0
     model.param_vals = 2 * px - t / n
-    

@@ -72,7 +72,7 @@ class ModelEffects(ModelMeans):
                             " Consider using ModelGeneralizedEffects.")
         self.effects_names = effects
         self.effects_loadings = defaultdict(float)
-        super().__init__(description, mimic_lavaan=mimic_lavaan, 
+        super().__init__(description, mimic_lavaan=mimic_lavaan,
                          cov_diag=cov_diag, baseline=baseline,
                          intercepts=intercepts)
 
@@ -310,7 +310,7 @@ class ModelEffects(ModelMeans):
             res = self._fit(obj='ML', solver=solver, **kwargs)
             return res
         else:
-            raise NotImplementedError(f'Unknown objective {obj}.')      
+            raise NotImplementedError(f'Unknown objective {obj}.')
 
     def effect_rf_covariance(self, items: dict):
         """
@@ -369,7 +369,7 @@ class ModelEffects(ModelMeans):
         None.
 
         """
-        
+
         self.calc_fim = self.calc_fim_means
 
     # def load_starting_values(self):
@@ -398,7 +398,6 @@ class ModelEffects(ModelMeans):
     #         self.mx_cov = self.mx_cov.reshape((1, 1))
     #     super().load_starting_values()
     #     self.mx_cov = cov
-
 
     '''
     ----------------------------LINEAR ALGEBRA PART---------------------------
@@ -784,7 +783,7 @@ class ModelEffects(ModelMeans):
         self.update_matrices(x)
         grad = np.zeros_like(x)
         center = self.mx_data_transformed - self.calc_mean(self.mx_m)
-        t =  (center * self.mx_w_inv).T @ self.mx_r_inv
+        t = (center * self.mx_w_inv).T @ self.mx_r_inv
         mean_grad = self.calc_mean_grad_reml()
         for i, g in enumerate(mean_grad):
             if len(g.shape):
@@ -888,7 +887,7 @@ class ModelEffects(ModelMeans):
     '''
     -------------------------Best Linear Unbiased Predictor--------------------
     '''
-    
+
     def calc_blup(self):
         """
         Estimate random effects values (BLUP).
@@ -905,7 +904,7 @@ class ModelEffects(ModelMeans):
         inds = d.diagonal() < 1e-3
         inds_i = self.mx_s < 1e-4
         d = delete_mx(d, inds)
-        sigma = delete_mx(sigma, inds) 
+        sigma = delete_mx(sigma, inds)
         z = np.delete(np.delete(z, inds, axis=0), inds_i, axis=1)
         sigma = np.linalg.inv(sigma)
         a = d @ sigma
@@ -1060,7 +1059,7 @@ class ModelEffects(ModelMeans):
     '''
     -------------------------Prediction method--------------------------------
     '''
-    
+
     def predict(self, x: pd.DataFrame, k=None, group=None):
         """
         Predict data given certain observations.
@@ -1157,7 +1156,8 @@ class ModelEffects(ModelMeans):
         c = np.linalg.inv(np.identity(self.mx_beta.shape[0]) - self.mx_beta)
         c_1 = c[:num_lat, :]
         c_2 = c[num_lat:, :]
-        g1 = self.mx_gamma1; g2 = self.mx_gamma2;
+        g1 = self.mx_gamma1;
+        g2 = self.mx_gamma2;
         M_h = x - (g2 + lambda_x @ c_2 @ g1) @ g
         t = lambda_x @ c_2
         L_zh = (t @ self.mx_psi @ t.T + self.mx_theta) * (x.shape[1])
