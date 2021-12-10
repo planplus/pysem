@@ -1,0 +1,7 @@
+numpy
+pandas
+scipy
+sympy
+sklearn
+statsmodels
+numdifftools
