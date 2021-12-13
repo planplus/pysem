@@ -29,7 +29,7 @@ class Model(ModelBase):
     symbn_bound_parameters = 'bound'
     symbn_constraint = 'constraint'
 
-    # Make sure that approriate function build_matrixname() is present.
+    # Make sure that appropriate function build_matrixname() is present.
     matrices_names = 'beta', 'lambda', 'psi', 'theta'
 
     @dataclass
@@ -544,7 +544,7 @@ class Model(ModelBase):
     
         Parameters
         ----------
-        model : str
+        mode : str
             Model.
         mode : str, optional
             If 'list', pd.DataFrame with estimates and p-values is returned.

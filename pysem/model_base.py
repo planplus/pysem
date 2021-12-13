@@ -26,7 +26,7 @@ class ModelBase(ABC):
     dict_effects = dict()
     dict_operations = dict()
 
-    def __init__(self, description: str):
+    def __init__(self, description):
         """
         Instantiate base model.
 

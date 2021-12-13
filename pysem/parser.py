@@ -3,9 +3,9 @@
 """Parser module."""
 from collections import defaultdict, namedtuple
 import re
+from enum import Enum
 
-Operation = namedtuple('Operation', 'name, params, onto',
-                       defaults=(None, None))
+Operation = namedtuple('Operation', 'name, params, onto', defaults=(None, None))
 __prt_lvalue = r'(\w[\w\.]*(?:\s*,\s*[\w.]*)*)'
 __prt_op = r'\s*((?:\s\w+\s)|(?:[=~\\\*@\$<>\-]+\S*?))\s*'
 __prt_rvalue = r'(-?\w[\w.-]*(?:\s*\*\s*\w[\w.]*)?(?:\s*\+\s*-?\w[\w.-]*(?:\s*\*\s*\w[\w.]*)?)*)'
@@ -15,6 +15,13 @@ PTRN_OPERATION_FULL = re.compile(r'([a-z][a-z_]*)\s*(.*?)\s*:\s*(.*)\s*')
 PTRN_OPERATION_PARAM = re.compile(r'([a-z][a-z_]*)\s*[\"\'\`]\s*(.+)\s*[\"\'\`]')
 PTRN_RVALUE = re.compile(r'((-?\w[\w.-]*\*)?\w[\w.]*)')
 PTRN_OP = re.compile(r'(\w+)(\(.*\))?')
+
+
+class SyntaxType(Enum):
+    OPERATOR = 0
+    OPERATION_FULL = 1
+    OPERATION_PARAM = 2
+    OPERATION_COMMAND = 3
 
 
 def separate_token(token: str):
@@ -36,7 +43,7 @@ def separate_token(token: str):
     -------
     int
         0 if effect, 1-2 if operation (depending on the format, there are 2
-        formats: the frist one is new small-case, the other is the old
+        formats: the first one is new small-case, the other is the old
         capital-case).
     tuple
         A tuple of (lvalue, operation, rvalue) if command is effect or
@@ -45,17 +52,17 @@ def separate_token(token: str):
     """
     effect = PTRN_EFFECT.fullmatch(token)
     if effect:
-        return 0, effect.groups()
+        return SyntaxType.OPERATOR, effect.groups()
     operation = PTRN_OPERATION_FULL.fullmatch(token)
     if operation:
-        return 1, operation.groups()
+        return SyntaxType.OPERATION_FULL, operation.groups()
     operation = PTRN_OPERATION_PARAM.fullmatch(token)
     if operation:
-        return 2, operation.groups()
+        return SyntaxType.OPERATION_PARAM, operation.groups()
     operation = PTRN_OPERATION.fullmatch(token)
-    if not operation:
-        raise SyntaxError(f'Invalind syntax for line:\n{token}')
-    return 3, operation.groups()
+    if operation:
+        return SyntaxType.OPERATION_COMMAND, operation.groups()
+    raise SyntaxError(f'Invalidate syntax for line:\n{token}')
 
 
 def parse_rvalues(token: str):
@@ -70,7 +77,7 @@ def parse_rvalues(token: str):
     Raises
     ------
     Exception
-        Rises when a certain rvalue can't be processed.
+        Raises when a certain rvalue can't be processed.
 
     Returns
     -------
@@ -83,15 +90,14 @@ def parse_rvalues(token: str):
     for tok in token.split('+'):
         rval = PTRN_RVALUE.match(tok)
         if not rval:
-            raise Exception(f'{rval} does not seem like a correct semopy \
-                            expression')
+            raise Exception(f'{rval} does not seem like a correct semopy expression')
         groups = rval.groups()
         name = groups[0].split('*')[-1]
         rvalues[name] = groups[1][:-1] if groups[1] else None
     return rvalues
 
 
-def parse_operation(operation: str, operands: str):
+def parse_operation(operation: str, operands: str) -> Operation:
     """
     Parse an operation according to semopy syntax.
 
@@ -126,14 +132,14 @@ def parse_operation(operation: str, operands: str):
     return operation
 
 
-def parse_new_operation(groups: tuple):
+def parse_new_operation(groups: tuple) -> Operation:
     """
     Parse an operation according to semopy syntax.
 
     Version for a new operation syntax.
     Parameters
     ----------
-    operation : tuple
+    groups : tuple
         Groups as returned by regex parser.
 
     Returns
@@ -174,10 +180,12 @@ def parse_desc(desc: str):
         Mapping operationName->list[Operation type].
 
     """
-    desc = desc.replace(chr(8764), chr(126))
+    desc = desc.replace(chr(8764), chr(126))  # 替换波浪线
     effects = defaultdict(lambda: defaultdict(dict))
     operations = defaultdict(list)
+    # 逐行解析
     for line in desc.splitlines():
+        # 忽略注释
         try:
             i = line.index('#')
             line = line[:i]
@@ -187,12 +195,12 @@ def parse_desc(desc: str):
         if line:
             try:
                 kind, items = separate_token(line)
-                if kind == 0:
+                if kind == SyntaxType.OPERATOR:
                     lefts, op_symb, rights = items
-                    for left in lefts.split(','):
-                        rvalues = parse_rvalues(rights)
+                    rvalues = parse_rvalues(rights)
+                    for left in lefts.split(','):  # 处理多个用都逗号分割的左值
                         effects[op_symb][left.strip()].update(rvalues)
-                elif kind < 3:
+                elif kind == SyntaxType.OPERATION_FULL or kind == SyntaxType.OPERATION_PARAM:
                     t = parse_new_operation(items)
                     operations[t.name].append(t)
                 else:
