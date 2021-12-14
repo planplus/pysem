@@ -165,7 +165,7 @@ $$
 如果我们替换公式5.2右侧变量 $Y_1$ 方差的表达式，可以得到：
 
 $$
-\tag{5.5}\sigma^2(Y_2)=\alpha_{21}^2\gamma_{11}^2\sigma^2(X1)+\alpha_{21}^2\gamma_{12}^2\sigma^2(X2)+\alpha_{21}^2\delta_{1}^2\sigma^2(\epsilon_1)+2\alpha_{21}^2\alpha_{21}\gamma_{11}\gamma_{12}\sigma(X_1, X_2)+\delta_{2}^2\sigma^2(\epsilon_2)
+\tag{5.5}\sigma^2(Y_2)=\alpha_{21}^2\gamma_{11}^2\sigma^2(X_1)+\alpha_{21}^2\gamma_{12}^2\sigma^2(X_2)+\alpha_{21}^2\delta_{1}^2\sigma^2(\epsilon_1)+2\alpha_{21}^2\alpha_{21}\gamma_{11}\gamma_{12}\sigma(X_1, X_2)+\delta_{2}^2\sigma^2(\epsilon_2)
 $$
 
 
