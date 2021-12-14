@@ -104,7 +104,7 @@ X = a_1X_1+a_2X_2+\dots+a_nX_n
 $$
 
 $$
-\sigma^2(X) = \sum_{i=1}^{n}a_i^2\sigma^2(X_i) + \sum_{\begin{aligned}i=1 \\ i \ne j\end{aligned}}^n\sum_{j=1}^na_ia_j\sigma(X_i, X_j)
+\sigma^2(X) = \sum_{i=1}^{n}a_i^2\sigma^2(X_i) + \sum_{{i = 1} \\ {i \ne j}}^n\sum_{j=1}^na_ia_j\sigma(X_i, X_j)
 $$
 
 换句话说，线性组合的方差等于权重的平方乘以每个分量的方差加上每对分量的协方差的二次累加，每个协方差都乘以分量对的权重乘积。
